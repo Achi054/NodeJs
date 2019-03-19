@@ -4,6 +4,7 @@
   "description": "Node with Express",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sujith Acharya",
@@ -12,6 +13,7 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "joi": "^14.3.1"
+    "joi": "^14.3.1",
+    "mongoose": "^5.4.19"
   }
 }

@@ -30,7 +30,7 @@ Open command prompt, type `node --version`
 - HTTP
 
 ## Node with Express framework
-Express.js, or simply Express, is a web application framework for Node.js, released as free and open-source software under the MIT License. It is designed for building web applications and APIs. It has been called the de facto standard server framework for Node.js
+[Express.js](https://expressjs.com/), or simply Express, is a web application framework for Node.js, released as free and open-source software under the MIT License. It is designed for building web applications and APIs. It has been called the de facto standard server framework for Node.js
 <br/>
 ```
 npm init --yes
@@ -49,10 +49,23 @@ http://localhost:3000/api/courses/30?sortBy=john
 sortBy=john anything after ? is query parameters or query
 ```
 
-Use `Joi` for validation. Object schema description language and validator for JavaScript objects
+Use [Joi](https://www.npmjs.com/package/joi) for validation. Object schema description language and validator for JavaScript objects
 ```
 npm install joi --save-dev
 ```
+## Node with MongoDB and Mongoose Client
+[MongoDB](https://www.mongodb.com/) is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemata.
+
+[Mongoose](https://mongoosejs.com/) provides a straight-forward, schema-based solution to model your application data. It includes built-in type casting, validation, query building, business logic hooks and more, out of the box.
+
+Used MongoDB Altas for use over cloud.
+The DataBase is hosted in Azure.
+
+To install Mongoose use
+```
+npm install mongoose --save-dev
+```
+
 
 
 

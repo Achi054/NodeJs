@@ -1,0 +1,6 @@
+{
+    "env": {
+        "MONGODB_ATLAS_PW": "fabregas054!",
+        "PORT": 3000
+    }
+}
