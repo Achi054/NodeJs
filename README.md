@@ -48,7 +48,7 @@ http://localhost:3000/api/courses/30?sortBy=john
 /api/courses/30 is request parameter or params
 sortBy=john anything after ? is query parameters or query
 ```
-<br/>
+
 Use `Joi` for validation. Object schema description language and validator for JavaScript objects
 ```
 npm install joi --save-dev
