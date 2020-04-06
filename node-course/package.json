@@ -1,0 +1,28 @@
+{
+  "name": "notepad",
+  "version": "1.0.0",
+  "description": "Quick note page to write content",
+  "main": "app.js",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "jshint": "^2.11.0",
+    "validator": "^13.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Achi054/NodeJs.git"
+  },
+  "keywords": [
+    "NodeJs"
+  ],
+  "author": "Sujith Acharya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Achi054/NodeJs/issues"
+  },
+  "homepage": "https://github.com/Achi054/NodeJs#readme"
+}
