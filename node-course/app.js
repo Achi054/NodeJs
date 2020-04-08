@@ -1,6 +1,6 @@
-const getNotes = require('./notes');
-const chalk = require('chalk');
 const yargs = require('yargs');
+const notes = require('./notes');
+const chalk = require('chalk');
 
 yargs.command({
 	command: 'add',
@@ -13,34 +13,53 @@ yargs.command({
 		},
 		body: {
 			describe: 'Text for the note',
+			demandOption: true,
 			type: 'string',
 		},
 	},
-	handler: function (argv) {
-		console.log(`Note with title '${argv.title}' created.\nText: ${argv.body}`);
+	handler(argv) {
+		notes.addNote(argv.title, argv.body);
 	},
 });
 
 yargs.command({
 	command: 'remove',
 	describe: 'Removed a note',
-	handler: function () {
-		console.log('Note removed !');
+	builder: {
+		title: {
+			describe: 'Note Title',
+			demandOption: true,
+			type: 'string',
+		}
+	},
+	handler(argv) {
+		notes.removeNotes(argv.title);
 	},
 });
 
 yargs.command({
 	command: 'read',
 	describe: 'Opening a note',
-	handler: function () {
-		console.log('Note opened !');
+	builder: {
+		title: {
+			describe: 'Note Title',
+			demandOption: true,
+			type: 'string',
+		}
+	},
+	handler(argv) {
+		console.log(chalk.bgBlue(notes.readNote(argv.title)));
 	},
 });
 
 yargs.command({
 	command: 'list',
 	describe: 'Display list of existing notes !',
-	handler: function () {
-		console.log('notes !');
+	handler() {
+		console.log(chalk.blue('Your lists:\n'));
+		var notes = notes.listNotes();
+		notes.foreach((note) => console.log(note.title + "\n"));
 	},
 });
+
+console.log(yargs.argv);
