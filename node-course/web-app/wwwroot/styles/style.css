@@ -1,4 +1,38 @@
-h1 {
-    color: grey;
-    font-family: Cambria;
+body {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    padding: 20px auto;
+    color: #333333;
+    font-family: arial;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+ }
+
+footer {
+    margin-top: 20px;
+    padding: 10px 0px;
+    border-top: 1px solid #888888
+}
+
+header {
+    margin-top: 20px;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 50px;
+}
+
+header a {
+    font-size: 20px;
+    margin-right: 20px;
+    text-decoration: none;
+    color: #bbbbbb;
 }
