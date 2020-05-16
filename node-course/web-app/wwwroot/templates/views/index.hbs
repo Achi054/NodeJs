@@ -1,19 +1,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../images/weather.jpg">
-    <link rel="stylesheet" href="../../styles/style.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" href="../../images/weather.jpg"/>
+    <link rel="stylesheet" href="../../styles/style.css"/>
     <title>Weather</title>
 </head>
 
 <body>
     <div class="main-content">
         {{>header}}
-        <div>Content</div>
+        <div>Use this site to get the weather information.</div>
+        <div>
+            <form>
+                <input type="text" placeholder="Location" />
+                <button type="submit">Search</button>
+
+                <p id="success-message"></p>
+                <p id="failure-message"></p>
+            </form>
+        </div>
     </div>
     {{>footer}}
+    <script src="../../js/weather.js"></script>
 </body>
 
 </html>

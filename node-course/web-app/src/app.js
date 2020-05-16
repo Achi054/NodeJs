@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
+const geoCode = require('./utility/geocode');
 
 const wwwpath = path.join(__dirname, '../wwwroot');
 const viewspath = path.join(__dirname, '../wwwroot/templates/views');
@@ -34,9 +35,23 @@ app.get('/help', (req, res) =>
 );
 
 app.get('/weather', (req, res) => {
-    res.render('weather', {
-        forecast: 'forecast',
-        location: 'location'
+    if(!req.query.address)
+    {
+        return res.send({
+            error: "Address must be specified."
+        });
+    }
+
+    geoCode.geocode(req.query.address, (error, {latitude, longitude, location} = {}) => {
+        if(error)
+        {
+            return res.send({ error: error});
+        }
+        res.send({
+            latitude,
+            longitude,
+            location
+        });
     });
 });
 
