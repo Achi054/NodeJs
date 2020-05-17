@@ -7,6 +7,7 @@ const wwwpath = path.join(__dirname, '../wwwroot');
 const viewspath = path.join(__dirname, '../wwwroot/templates/views');
 const partialspath = path.join(__dirname, '../wwwroot/templates/partials');
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.static(wwwpath));
 app.set('view engine', 'hbs');
@@ -67,6 +68,6 @@ app.get('*', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Web server is up at port 3000');
+app.listen(port, () => {
+    console.log('Web server is up at port ' + port);
 });
