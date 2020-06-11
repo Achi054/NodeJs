@@ -1,0 +1,75 @@
+const expres = require('express');
+const User = require('../models/user.js');
+
+const router = new expres.Router();
+
+// User API(s)
+router.delete('/users/:id',async (req, res) => {
+    try {
+        var user = User.findByIdAndDelete(req.params.id);
+
+        if(!user)
+            return res.status(404).send();
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+router.patch('/users/:id', async(req, res) => {
+    var updatingProperty = Object.keys(req.body);
+    var updatableProperty = ['age', 'name', 'email', 'password'];
+    var isUpdatePossible = updatingProperty.every((property) => updatableProperty.includes(property));
+
+    if(!isUpdatePossible)
+        return res.status(400).send({'error': 'Invalid update!'});
+    
+    try {
+        var id = req.params.id;
+        var user = await User.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
+        if(!user)
+            return res.status(404).send();
+        res.status(200).send(user);        
+    } catch (error) {
+        res.status(400).send(e);
+    }
+});
+
+router.post('/users', async (req, res) => {
+    var user = new User(req.body);
+
+    try {
+        await user.save();
+        res.send(user);
+    } catch (error) {
+        res.status(400).send(error); 
+    }
+});
+
+router.get('/users', async (req, res) => {
+    try {
+        var user = await User.find();
+        if(!users)
+            return res.status(404).send('User not found');
+        res.send(users);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+router.get('/users/:id', async (req, res) => {
+    var id = req.params.id;
+
+    try {
+        var user = await User.findById(id);
+        if(!user)
+            return res.status(404).send('User not found');
+        res.send(user);
+
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+module.exports = router;
