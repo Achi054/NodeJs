@@ -4,6 +4,15 @@ const User = require('../models/user.js');
 const router = new expres.Router();
 
 // User API(s)
+router.post('/users/login', async (req, res) => {
+    try {
+        var user = await User.findByCredential(req.body.email, req.body.password);
+        res.send(user);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
 router.delete('/users/:id', async (req, res) => {
     try {
         var user = User.findByIdAndDelete(req.params.id);

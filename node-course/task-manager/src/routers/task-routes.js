@@ -25,7 +25,7 @@ router.patch('/tasks/:id', async (req, res) => {
 
     try {
         var task = Task.findById(req.params.id);
-        updatableProperties.forEach((update) => task[update] = req.body[update]);
+        updatingProperties.forEach((update) => task[update] = req.body[update]);
         task.save();
 
         if (!task)
