@@ -4,11 +4,11 @@ const User = require('../models/user.js');
 const router = new expres.Router();
 
 // User API(s)
-router.delete('/users/:id',async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
     try {
         var user = User.findByIdAndDelete(req.params.id);
 
-        if(!user)
+        if (!user)
             return res.status(404).send();
         res.status(200).send(user);
     } catch (error) {
@@ -16,21 +16,25 @@ router.delete('/users/:id',async (req, res) => {
     }
 });
 
-router.patch('/users/:id', async(req, res) => {
+router.patch('/users/:id', async (req, res) => {
     var updatingProperty = Object.keys(req.body);
     var updatableProperty = ['age', 'name', 'email', 'password'];
     var isUpdatePossible = updatingProperty.every((property) => updatableProperty.includes(property));
 
-    if(!isUpdatePossible)
-        return res.status(400).send({'error': 'Invalid update!'});
-    
+    if (!isUpdatePossible)
+        return res.status(400).send({
+            'error': 'Invalid update!'
+        });
+
     try {
         var id = req.params.id;
-        var user = await User.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        var user = User.findById(id);
+        updatingProperty.forEach((update) => user[update] = req.body[update]);
+        user.save();
 
-        if(!user)
+        if (!user)
             return res.status(404).send();
-        res.status(200).send(user);        
+        res.status(200).send(user);
     } catch (error) {
         res.status(400).send(e);
     }
@@ -43,14 +47,14 @@ router.post('/users', async (req, res) => {
         await user.save();
         res.send(user);
     } catch (error) {
-        res.status(400).send(error); 
+        res.status(400).send(error);
     }
 });
 
 router.get('/users', async (req, res) => {
     try {
         var user = await User.find();
-        if(!users)
+        if (!users)
             return res.status(404).send('User not found');
         res.send(users);
     } catch (error) {
@@ -63,7 +67,7 @@ router.get('/users/:id', async (req, res) => {
 
     try {
         var user = await User.findById(id);
-        if(!user)
+        if (!user)
             return res.status(404).send('User not found');
         res.send(user);
 

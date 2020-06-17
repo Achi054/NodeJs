@@ -3,11 +3,11 @@ const Task = require('../models/task.js');
 const router = new express.Router();
 
 // Task API(s)
-router.delete('/tasks/:id',async (req, res) => {
+router.delete('/tasks/:id', async (req, res) => {
     try {
         var task = Task.findByIdAndDelete(req.params.id);
 
-        if(!task)
+        if (!task)
             return res.status(404).send();
         res.status(200).send(task);
     } catch (error) {
@@ -20,13 +20,15 @@ router.patch('/tasks/:id', async (req, res) => {
     var updatableProperties = ['description', 'conpleted'];
     var isUpdatePossible = updatableProperties.every((property) => updatableProperties.includes(property));
 
-    if(!isUpdatePossible)
+    if (!isUpdatePossible)
         return res.status(400).send();
-    
-    try {
-        var task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
 
-        if(!task)
+    try {
+        var task = Task.findById(req.params.id);
+        updatableProperties.forEach((update) => task[update] = req.body[update]);
+        task.save();
+
+        if (!task)
             return res.status(404).send();
         res.status(200).send(task);
     } catch (error) {
@@ -48,7 +50,7 @@ router.post('/tasks', async (req, res) => {
 router.get('/tasks', async (req, res) => {
     try {
         var task = await Task.find();
-        if(!tasks)
+        if (!tasks)
             return res.status(404).send('No tasks available.');
         res.send(tasks);
     } catch (error) {
@@ -61,7 +63,7 @@ router.get('/tasks/:id', async (req, res) => {
 
     try {
         var task = Task.findById(id);
-        if(!task)
+        if (!task)
             return res.status(404).send('Task not found');
         res.send(task);
     } catch (error) {
