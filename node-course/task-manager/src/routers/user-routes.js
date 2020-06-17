@@ -1,26 +1,32 @@
 const expres = require('express');
 const User = require('../models/user');
-const auth = require('../middleware/authentication');
+const authenticate = require('../middleware/authentication');
 
 const router = new expres.Router();
 
 // User API(s)
+router.get('/users/me', authenticate, async (req, res) => {
+    res.status(200).send(req.user);
+});
+
 router.post('/users/login', async (req, res) => {
     try {
         var user = await User.findByCredential(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.send({
+        res.status(201).send({
             user,
             token
         });
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            error: error.message
+        });
     }
 });
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', authenticate, async (req, res) => {
     try {
-        var user = User.findByIdAndDelete(req.params.id);
+        var user = User.findByIdAndDelete(req.user.id);
 
         if (!user) return res.status(404).send();
         res.status(200).send(user);
@@ -29,7 +35,7 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', authenticate, async (req, res) => {
     var updatingProperty = Object.keys(req.body);
     var updatableProperty = ['age', 'name', 'email', 'password'];
     var isUpdatePossible = updatingProperty.every((property) =>
@@ -50,7 +56,7 @@ router.patch('/users/:id', async (req, res) => {
         if (!user) return res.status(404).send();
         res.status(200).send(user);
     } catch (error) {
-        res.status(400).send(e);
+        res.status(400).send(error);
     }
 });
 
@@ -66,22 +72,6 @@ router.post('/users', async (req, res) => {
         });
     } catch (error) {
         res.status(400).send(error);
-    }
-});
-
-router.get('/users/me', auth, async (req, res) => {
-    res.status(200).send(req.user);
-});
-
-router.get('/users/:id', async (req, res) => {
-    var id = req.params.id;
-
-    try {
-        var user = await User.findById(id);
-        if (!user) return res.status(404).send('User not found');
-        res.send(user);
-    } catch (error) {
-        res.status(500).send(error);
     }
 });
 

@@ -5,7 +5,7 @@ const authenticate = async (req, res, next) => {
     try {
         var token = req.header('Authorization').replace('Bearer ', '');
         var decoded = jwt.verify(token, 'thisismynodeapp');
-        var user = User.findOne({
+        var user = await User.findOne({
             _id: decoded._id,
             'tokens.token': token
         });
@@ -20,4 +20,4 @@ const authenticate = async (req, res, next) => {
     }
 };
 
-module.exports = auth;
+module.exports = authenticate;
