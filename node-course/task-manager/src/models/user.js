@@ -36,20 +36,22 @@ var userSchema = mongoose.Schema({
 			if (value < 0) throw new Error('Age should be a positive number.');
 		},
 	},
-	tokens: [
-		{
-			token: {
-				type: String,
-				require: true,
-			},
+	tokens: [{
+		token: {
+			type: String,
+			require: true,
 		},
-	],
+	}, ],
 });
 
 userSchema.methods.generateAuthToken = async function () {
 	var user = this;
-	var token = jwt.sign({ _id: user._id.toString() }, 'thisismynodeapp');
-	user.tokens = user.tokens.concat({ token });
+	var token = jwt.sign({
+		_id: user._id.toString()
+	}, 'thisismynodeapp');
+	user.tokens = user.tokens.concat({
+		token
+	});
 	await user.save();
 
 	return token;
@@ -62,7 +64,7 @@ userSchema.statics.findByCredential = async (email, password) => {
 
 	if (!user) throw new Error('Unable to login');
 
-	var isMatch = bcrypt.compare(user.password, password);
+	var isMatch = await bcrypt.compare(user.password, password);
 
 	if (!isMatch) throw new Error('Unable to login');
 

@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "nodemon ./src/index.js",
 		"dev": "node ./src/index.js",
-		"debug": "node --inspect-brk=3000 ./src/index.js"
+		"debug": "node --inspect-brk ./src/index.js"
 	},
 	"author": "",
 	"license": "ISC",
