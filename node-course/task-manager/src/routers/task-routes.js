@@ -1,5 +1,6 @@
 const express = require('express');
 const Task = require('../models/task.js');
+const authenticate = require('../middleware/authentication');
 const router = new express.Router();
 
 // Task API(s)
@@ -36,8 +37,11 @@ router.patch('/tasks/:id', async (req, res) => {
     }
 });
 
-router.post('/tasks', async (req, res) => {
-    var task = new Task(req.body);
+router.post('/tasks', authenticate, async (req, res) => {
+    var task = new Task({
+        ...req.body,
+        owner: req.user._id
+    });
 
     try {
         await task.save();
@@ -49,7 +53,7 @@ router.post('/tasks', async (req, res) => {
 
 router.get('/tasks', async (req, res) => {
     try {
-        var task = await Task.find();
+        var tasks = await Task.find();
         if (!tasks)
             return res.status(404).send('No tasks available.');
         res.send(tasks);

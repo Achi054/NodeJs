@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
-var validate = require('validator');
 
-var Tasks = new mongoose.model('tasks', {
+var Task = new mongoose.model('Task', {
     description: {
         type: String,
         trim: true
@@ -9,7 +8,12 @@ var Tasks = new mongoose.model('tasks', {
     completed: {
         type: Boolean,
         default: false
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 
-module.exports = Tasks;
+module.exports = Task;

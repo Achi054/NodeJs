@@ -44,6 +44,12 @@ var userSchema = mongoose.Schema({
 	}, ],
 });
 
+userSchema.virtual('tasks', {
+	ref: 'Task',
+	localField: '_id',
+	foreignField: 'owner'
+});
+
 userSchema.methods.toJSON = function () {
 	var user = this;
 	var userObject = user.toObject();
@@ -90,6 +96,6 @@ userSchema.pre('save', async function (next) {
 	next();
 });
 
-var User = new mongoose.model('users', userSchema);
+var User = new mongoose.model('User', userSchema);
 
 module.exports = User;
