@@ -6,17 +6,22 @@ const router = new express.Router();
 // Task API(s)
 router.delete('/tasks/:id', async (req, res) => {
     try {
-        var task = Task.findByIdAndDelete(req.params.id);
+        var task = Task.findOne({
+            _id: req.params.id,
+            owner: req.user._id
+        });
 
         if (!task)
             return res.status(404).send();
+
+        task.remove();
         res.status(200).send(task);
     } catch (error) {
         res.status(500).send(error);
     }
 });
 
-router.patch('/tasks/:id', async (req, res) => {
+router.patch('/tasks/:id', authenticate, async (req, res) => {
     var updatingProperties = Object.keys(req.body);
     var updatableProperties = ['description', 'conpleted'];
     var isUpdatePossible = updatableProperties.every((property) => updatableProperties.includes(property));
@@ -25,7 +30,10 @@ router.patch('/tasks/:id', async (req, res) => {
         return res.status(400).send();
 
     try {
-        var task = Task.findById(req.params.id);
+        var task = Task.findOne({
+            _id: req.params.id,
+            owner: req.user._id
+        });
         updatingProperties.forEach((update) => task[update] = req.body[update]);
         task.save();
 
@@ -51,9 +59,11 @@ router.post('/tasks', authenticate, async (req, res) => {
     }
 });
 
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', authenticate, async (req, res) => {
     try {
-        var tasks = await Task.find();
+        var tasks = await Task.find({
+            owner: req.user._id
+        });
         if (!tasks)
             return res.status(404).send('No tasks available.');
         res.send(tasks);
@@ -62,11 +72,14 @@ router.get('/tasks', async (req, res) => {
     }
 });
 
-router.get('/tasks/:id', async (req, res) => {
-    var id = req.params.id;
+router.get('/tasks/:id', authenticate, async (req, res) => {
+    var _id = req.params.id;
 
     try {
-        var task = Task.findById(id);
+        var task = Task.findOne({
+            _id,
+            owner: req.user._id
+        });
         if (!task)
             return res.status(404).send('Task not found');
         res.send(task);
