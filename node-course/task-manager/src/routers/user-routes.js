@@ -13,7 +13,7 @@ router.post('/users/login', async (req, res) => {
     try {
         var user = await User.findByCredential(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.status(201).send({
+        res.status(200).send({
             user,
             token
         });
@@ -21,6 +21,28 @@ router.post('/users/login', async (req, res) => {
         res.status(400).send({
             error: error.message
         });
+    }
+});
+
+router.post('/users/logout', authenticate, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter(token => token.token != req.token);
+        req.user.save();
+
+        res.send();
+    } catch (error) {
+        res.status(500).send();
+    }
+});
+
+router.post('/users/logoutall', authenticate, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        req.user.save();
+
+        res.send();
+    } catch (error) {
+        res.status(500).send();
     }
 });
 
@@ -66,7 +88,7 @@ router.post('/users', async (req, res) => {
     try {
         await user.save();
         var token = await user.generateAuthToken();
-        res.send({
+        res.status(201).send({
             token,
             user
         });
