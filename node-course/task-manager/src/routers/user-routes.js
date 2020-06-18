@@ -24,7 +24,7 @@ router.post('/users/login', async (req, res) => {
     }
 });
 
-router.post('/users/logout', authenticate, async (req, res) => {
+router.post('/users/me/logout', authenticate, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter(token => token.token != req.token);
         req.user.save();
@@ -35,7 +35,7 @@ router.post('/users/logout', authenticate, async (req, res) => {
     }
 });
 
-router.post('/users/logoutall', authenticate, async (req, res) => {
+router.post('/users/me/logoutall', authenticate, async (req, res) => {
     try {
         req.user.tokens = [];
         req.user.save();
@@ -46,18 +46,16 @@ router.post('/users/logoutall', authenticate, async (req, res) => {
     }
 });
 
-router.delete('/users/:id', authenticate, async (req, res) => {
+router.delete('/users/me', authenticate, async (req, res) => {
     try {
-        var user = User.findByIdAndDelete(req.user.id);
-
-        if (!user) return res.status(404).send();
+        await req.user.remove();
         res.status(200).send(user);
     } catch (error) {
         res.status(500).send(error);
     }
 });
 
-router.patch('/users/:id', authenticate, async (req, res) => {
+router.patch('/users/me', authenticate, async (req, res) => {
     var updatingProperty = Object.keys(req.body);
     var updatableProperty = ['age', 'name', 'email', 'password'];
     var isUpdatePossible = updatingProperty.every((property) =>
@@ -70,10 +68,8 @@ router.patch('/users/:id', authenticate, async (req, res) => {
         });
 
     try {
-        var id = req.params.id;
-        var user = User.findById(id);
-        updatingProperty.forEach((update) => (user[update] = req.body[update]));
-        user.save();
+        updatingProperty.forEach((update) => (req.user[update] = req.body[update]));
+        req.user.save();
 
         if (!user) return res.status(404).send();
         res.status(200).send(user);
