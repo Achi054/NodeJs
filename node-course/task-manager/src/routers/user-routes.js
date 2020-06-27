@@ -51,7 +51,9 @@ router.delete('/users/me', authenticate, async (req, res) => {
         await req.user.remove();
         res.status(200).send(user);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({
+            error: error.message
+        });
     }
 });
 
@@ -74,7 +76,9 @@ router.patch('/users/me', authenticate, async (req, res) => {
         if (!user) return res.status(404).send();
         res.status(200).send(user);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            error: error.message
+        });
     }
 });
 
@@ -89,7 +93,9 @@ router.post('/users', async (req, res) => {
             user
         });
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            error: error.message
+        });
     }
 });
 

@@ -17,7 +17,9 @@ router.delete('/tasks/:id', async (req, res) => {
         task.remove();
         res.status(200).send(task);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({
+            error: error.message
+        });
     }
 });
 
@@ -41,7 +43,9 @@ router.patch('/tasks/:id', authenticate, async (req, res) => {
             return res.status(404).send();
         res.status(200).send(task);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            error: error.message
+        });
     }
 });
 
@@ -55,36 +59,30 @@ router.post('/tasks', authenticate, async (req, res) => {
         await task.save();
         res.send(task);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            error: error.message
+        });
     }
 });
 
+// get tasks based on completed
 router.get('/tasks', authenticate, async (req, res) => {
-    try {
-        var tasks = await Task.find({
-            owner: req.user._id
-        });
-        if (!tasks)
-            return res.status(404).send('No tasks available.');
-        res.send(tasks);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+    var match = {};
 
-router.get('/tasks/:id', authenticate, async (req, res) => {
-    var _id = req.params.id;
+    if (req.query.completed)
+        match.completed = req.query.completed === 'true';
 
     try {
-        var task = Task.findOne({
-            _id,
-            owner: req.user._id
-        });
-        if (!task)
-            return res.status(404).send('Task not found');
-        res.send(task);
+        await req.user.populate({
+            path: 'tasks',
+            match
+        }).execPopulate();
+
+        res.send(req.user.tasks);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({
+            error: error.message
+        });
     }
 });
 
