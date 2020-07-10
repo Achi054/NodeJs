@@ -65,17 +65,28 @@ router.post('/tasks', authenticate, async (req, res) => {
     }
 });
 
-// get tasks based on completed
+// get tasks based on completed=true/false
+// get tasks based on limit & skip
+// get taks sorted with asc/desc on a property, format ?sort=createdon:asc
 router.get('/tasks', authenticate, async (req, res) => {
     var match = {};
+    var sort = {};
 
     if (req.query.completed)
         match.completed = req.query.completed === 'true';
 
+    var sortingParams = req.query.sort.split(':');
+    sortBy[sortingParams[0]] = sortingParams[1] === 'desc' ? -1 : 1;
+
     try {
         await req.user.populate({
             path: 'tasks',
-            match
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
         }).execPopulate();
 
         res.send(req.user.tasks);
