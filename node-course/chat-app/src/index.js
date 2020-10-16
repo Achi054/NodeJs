@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socket = require('socket.io');
+const Filter = require('bad-words');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,15 +13,25 @@ const publicDir = path.join(__dirname, '../public');
 
 app.use(express.static(publicDir));
 
-let counter = 0;
 io.on('connection', (socket) => {
-    console.log('Connection established!')
+    socket.on('sentMessage', (message, callback) => {
+        var filter = new Filter();
+        if(filter.isProfane(message))
+            callback('Profanity not allowed!');
 
-    socket.emit('counterUpdated', counter);
+        io.emit('message', message);
+        callback();
+    });
 
-    socket.on('increment', () => {
-        counter++;
-        io.emit('counterUpdated', counter);
+    socket.broadcast.emit('sentMessage', 'A new user has connected!');
+
+    socket.on('sendLocation', (coords, callback) => {
+        io.emit('locationMessage', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+        callback();
+    });
+
+    socket.on('disconnect', () => {
+        io.emit('sentMessage', 'A user has left!');
     });
 });
 
