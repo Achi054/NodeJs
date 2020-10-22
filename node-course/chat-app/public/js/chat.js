@@ -8,6 +8,8 @@ const $messages = document.querySelector('#messages');
 const $locations = document.querySelector('#locations');
 const $sidebar = document.querySelector('#sidebar');
 const $sendLocationButton = document.querySelector('#send-location');
+const $videoContent = document.querySelector('#video-modal');
+const $videoChatButton = document.querySelector('#video-chat');
 
 // Query string
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -16,6 +18,7 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationTemplate = document.querySelector('#location-template').innerHTML;
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
+const videoTemplate = document.querySelector('#video-template').innerHTML;
 
 // autoscroll
 const autoscroll = () => {
@@ -98,6 +101,34 @@ $sendLocationButton.addEventListener('click', () => {
             console.log('Location shared!');
         });
     });
+});
+
+$videoChatButton.addEventListener('click', (e) => {
+    // Video and audio settings
+    var html = Mustache.render(videoTemplate, {
+        room
+    });
+    $videoContent.innerHTML = html;
+
+    navigator.getUserMedia(
+        { video: true, audio: true },
+        stream => {
+            const localVideo = document.getElementById("local-video");
+            if (localVideo) {
+                localVideo.srcObject = stream;
+            }
+        },
+        error => {
+            console.warn(error.message);
+        }
+    );
+});
+
+$(document).on('click', '#hang-up', () => {
+    const localVideo = document.getElementById("local-video");
+    if (localVideo) {
+        localVideo.srcObject = null;
+    }
 });
 
 socket.emit('join', { username, room }, (error) => {

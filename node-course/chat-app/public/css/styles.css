@@ -170,6 +170,10 @@ button:disabled {
     margin-right: 16px;
 }
 
+.compose .send-location {
+    margin-right: 16px;
+}
+
 .compose input {
     border: 1px solid #eeeeee;
     width: 100%;
@@ -214,4 +218,11 @@ header, .row {
 
 h3 {
     margin-top: 20px;
+}
+
+/* Video content */
+.video-container {
+    position: absolute;
+    z-index: 10;
+    cursor: move;
 }
