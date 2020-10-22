@@ -18,7 +18,6 @@ const locationTemplate = document.querySelector('#location-template').innerHTML;
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 // autoscroll
-
 const autoscroll = () => {
     // New message element
     const newMessageElement = $messages.lastElementChild;

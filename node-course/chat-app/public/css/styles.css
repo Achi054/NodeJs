@@ -78,6 +78,28 @@ button:disabled {
     width: 100%;
 }
 
+.centered-form .row
+{
+    margin: 5px;
+}
+
+.centered-form .col
+{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.centered-form .button-container
+{
+    justify-content: center;
+}
+
+.centered-form .col button
+{
+    width: auto;
+}
+
 .centered-form input {
     margin-bottom: 16px;
     width: 100%;
@@ -180,4 +202,16 @@ button:disabled {
     list-style-type: none;
     font-weight: 300;
     padding: 12px 24px 0 24px;
+}
+
+header, .row {
+    display: flex;
+}
+
+.col {
+    flex: 1;
+}
+
+h3 {
+    margin-top: 20px;
 }
